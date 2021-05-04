@@ -5,6 +5,29 @@
   <title>Register</title>
 </head>
 <body>
-  <h1>Register</h1>
+<div class="container">
+  <div class="form-wrapper d-flex align-items-center justify-content-center">
+    <form id="form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" aria-describedby="name" placeholder="Enter name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" placeholder="Password">
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="check">
+        <label class="form-check-label" for="check">I am psychologist</label>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Register</button>
+    </form>
+  </div>
+</div>
 </body>
 </html>
