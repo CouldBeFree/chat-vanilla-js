@@ -1,4 +1,2 @@
-import { element, btn } from "./lib";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-document.body.appendChild(element())
-document.body.appendChild(btn())

@@ -1,20 +1,81 @@
 const path = require('path')
 const htmlWebpackPlugin = require('html-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = {
+  mode: 'development',
   entry: {
     index: './src/index.js',
-    lib: './src/lib'
+    login: './src/login/login.js',
+    register: './src/register/register.js'
+  },
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './dist'
   },
   plugins: [
     new htmlWebpackPlugin({
-      title: 'Management',
-      minify: false
+      template: './src/index.html',
+      inject: true,
+      chunks: ['index'],
+      filename: 'index.html'
+    }),
+    new htmlWebpackPlugin({
+      template: './src/login/login.html',
+      inject: true,
+      chunks: ['login'],
+      filename: 'login.html'
+    }),
+    new htmlWebpackPlugin({
+      template: './src/register/register.html',
+      inject: true,
+      chunks: ['register'],
+      filename: 'register.html'
     })
   ],
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
-    clean: true
+    clean: true,
+    publicPath: '/'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource'
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          "style-loader",
+          "css-loader",
+          "sass-loader"
+        ],
+      }
+    ]
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        test: /\.js(\?.*)?$/i,
+        parallel: true
+      }),
+      new CssMinimizerPlugin()
+    ]
   }
 }
