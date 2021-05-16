@@ -12,4 +12,16 @@
   .hidden {
     display: none;
   }
+
+  .form {
+    position: relative;
+
+    .alert {
+      position: absolute;
+      bottom: -90px;
+      left: 0;
+      right: 0;
+      width: 100%;
+    }
+  }
 }

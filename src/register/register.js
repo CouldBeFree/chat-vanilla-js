@@ -17,6 +17,7 @@ function FormHandler () {
     const dangerAlert = document.getElementById('danger')
     const successAlert = document.getElementById('success')
     const requiredFields = document.querySelectorAll('[data-required="required"]')
+    const button = document.querySelector('button[type="submit"]')
 
     return {
       nameInput,
@@ -25,7 +26,8 @@ function FormHandler () {
       checkBox,
       dangerAlert,
       successAlert,
-      requiredFields
+      requiredFields,
+      button
     }
   }
 
@@ -81,15 +83,21 @@ function FormHandler () {
   init()
 
   this.submitForm = function () {
+    nodes.dangerAlert.classList.add('hidden')
+    nodes.successAlert.classList.add('hidden')
+
     if (validateForm()) {
+      nodes.button.disabled = true
       axios.post('auth/register', formData)
-        .then(res => console.log(res))
+        .then(() => {
+          nodes.successAlert.classList.remove('hidden')
+          nodes.successAlert.innerText = 'U have been successfully registered'
+        })
         .catch((e) => {
           nodes.dangerAlert.innerText = e.response.data.message
           nodes.dangerAlert.classList.remove('hidden')
-          console.log(e.message)
-          console.dir(e.response.data.message)
         })
+        .finally(() => nodes.button.disabled = false)
     }
   }
 }
