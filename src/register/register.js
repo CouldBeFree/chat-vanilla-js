@@ -7,6 +7,8 @@ function FormHandler () {
     userType: 'user'
   }
 
+  let nodes = null
+
   const selectors = function () {
     const nameInput = document.getElementById('name')
     const emailInput = document.getElementById('email')
@@ -28,31 +30,51 @@ function FormHandler () {
   }
 
   const validateForm = function () {
-    const items = selectors()
-    items.requiredFields.forEach(el => {
+    let isValid = true
+
+    nodes.requiredFields.forEach(el => {
       const { length, required } = el.dataset
+      el.classList.remove('invalid')
+
       if (required && length > el.value.length) {
         el.classList.add('invalid')
-        console.log('el', el)
+        isValid = false
+      }
+
+      if (el.id === 'email' && !el.value.length) {
+        el.classList.add('invalid')
+        isValid = false
       }
     })
+
+    return isValid
   }
 
   const init = function () {
-    selectors().nameInput.addEventListener('input', e => {
-      formData['name'] = e.target.value
-    })
+    nodes = selectors()
 
-    selectors().emailInput.addEventListener('input', e => {
-      formData['email'] = e.target.value
-    })
+    const eventTarget = {
+      name: 'name',
+      email: 'email',
+      password: 'password'
+    }
 
-    selectors().passwordInput.addEventListener('input', e => {
-      formData['password'] = e.target.value
-    })
+    for (const node in nodes) {
+      if (eventTarget[nodes[node].id]) {
+        nodes[node].addEventListener('input', e => {
+          formData[eventTarget[nodes[node].id]] = e.target.value
+        })
+      }
+    }
 
-    selectors().checkBox.addEventListener('change', e => {
-      formData['checked'] = e.target.value
+    nodes.checkBox.addEventListener('change', e => {
+      const isChecked = nodes.checkBox.checked
+
+      if (isChecked) {
+        formData.userType = 'psychologist'
+      } else {
+        formData.userType = 'user'
+      }
     })
   }
 
@@ -62,9 +84,11 @@ function FormHandler () {
     if (validateForm()) {
       axios.post('auth/register', formData)
         .then(res => console.log(res))
-        .catch(() => {
-          selectors().dangerAlert.innerText = 'Something went wrong'
-          selectors().dangerAlert.classList.remove('hidden')
+        .catch((e) => {
+          nodes.dangerAlert.innerText = e.response.data.message
+          nodes.dangerAlert.classList.remove('hidden')
+          console.log(e.message)
+          console.dir(e.response.data.message)
         })
     }
   }
