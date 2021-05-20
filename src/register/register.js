@@ -1,8 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss'
 import { axios } from '../utils/axios'
+import { Input } from '../base/form-components'
 
-function FormHandler () {
+/*function FormHandler () {
   const formData = {
     userType: 'user'
   }
@@ -109,4 +110,23 @@ const handler = new FormHandler()
 form.addEventListener('submit', function (e) {
   e.preventDefault()
   handler.submitForm()
-})
+})*/
+
+function RegisterHandler () {
+  const nameInput = document.getElementById('name')
+  const form = document.getElementById('form')
+
+  const name = new Input(nameInput, {
+    required: true,
+    minLength: 4,
+    errorMessage: 'Name is required'
+  })
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const nameData = name.notify()
+    console.log(nameData);
+  })
+}
+
+const handler = new RegisterHandler()
