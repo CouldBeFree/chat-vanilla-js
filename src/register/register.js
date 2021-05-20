@@ -62,7 +62,7 @@ function FormHandler () {
     }
 
     for (const node in nodes) {
-      if (eventTarget[nodes[node].id]) {
+      if (node && eventTarget[nodes[node].id]) {
         nodes[node].addEventListener('input', e => {
           formData[eventTarget[nodes[node].id]] = e.target.value
         })
@@ -92,6 +92,7 @@ function FormHandler () {
         .then(() => {
           nodes.successAlert.classList.remove('hidden')
           nodes.successAlert.innerText = 'U have been successfully registered'
+          nodes.nameInput.value = ''
         })
         .catch((e) => {
           nodes.dangerAlert.innerText = e.response.data.message
