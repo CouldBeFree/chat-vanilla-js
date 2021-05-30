@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss'
 import { axios } from '../utils/axios'
 import { Input, CheckBox } from '../base/form-components'
+import Notify from '../base/notify'
 
 function RegisterHandler () {
   const nameInput = document.getElementById('name')
@@ -9,6 +10,8 @@ function RegisterHandler () {
   const emailInput = document.getElementById('email')
   const passwordInput = document.getElementById('password')
   const checkBox = document.getElementById('check')
+
+  this.alert = new Notify()
 
   this.formData = {
     userType: 'user'
@@ -69,13 +72,19 @@ function RegisterHandler () {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault()
+    const suc = this.alert.createElement('success')
+    const notifier = suc.createAlert('User successfully saved')
+    console.log('notifier', notifier)
     const isValid = validate()
     if (isValid) {
       axios.post('/auth/register', this.formData)
-        .then(res => console.log(res))
+        .then(res => {
+          // const el = Notify.createElement('success')
+          // console.log(el);
+        })
         .catch(err => console.error(err))
     } else {
-      alert('Not valid')
+      console.log(1);
     }
   })
 }
