@@ -1,15 +1,18 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss'
 import { axios } from '../utils/axios'
-import { Input } from '../base/form-components'
+import { Input, CheckBox } from '../base/form-components'
 
 function RegisterHandler () {
   const nameInput = document.getElementById('name')
   const form = document.getElementById('form')
   const emailInput = document.getElementById('email')
   const passwordInput = document.getElementById('password')
+  const checkBox = document.getElementById('check')
 
-  this.formData = {}
+  this.formData = {
+    userType: 'user'
+  }
 
   const name = new Input(nameInput, {
     fieldName: 'name',
@@ -26,7 +29,16 @@ function RegisterHandler () {
     mediator: this
   })
 
+  new CheckBox(checkBox, {
+    fieldName: 'psychologist',
+    mediator: this
+  })
+
   this.notify = function (data, fieldName) {
+    if (fieldName === 'psychologist') {
+      this.formData.userType = data ? 'psychologist' : 'user'
+      return
+    }
     this.formData[fieldName] = data
   }
 
@@ -52,19 +64,20 @@ function RegisterHandler () {
       errorMessage: 'Password is required'
     })
 
-    return isNameValid || isEmailValid || isPasswordValid;
+    return isNameValid && isEmailValid && isPasswordValid;
   }
 
   form.addEventListener('submit', (e) => {
     e.preventDefault()
-    // const nameData = name.notify()
     const isValid = validate()
     if (isValid) {
-      alert('Valid')
+      axios.post('/auth/register', this.formData)
+        .then(res => console.log(res))
+        .catch(err => console.error(err))
     } else {
       alert('Not valid')
     }
   })
 }
 
-const handler = new RegisterHandler()
+new RegisterHandler()

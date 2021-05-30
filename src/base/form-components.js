@@ -24,9 +24,15 @@ function Input (node, options = { required: true, minLength: 5 }) {
     if (!options.required) return
     node.classList.remove('invalid')
 
-    if (!options.data || options.data.length < options.minLength) {
+    if (!options.data) {
       node.classList.add('invalid')
       errorMessage(options.errorMessage)
+      return false
+    }
+
+    if (options.data.length < options.minLength) {
+      node.classList.add('invalid')
+      errorMessage(`Minimal length should be ${options.minLength} characters`)
       return false
     }
 
@@ -35,6 +41,17 @@ function Input (node, options = { required: true, minLength: 5 }) {
   }
 }
 
+function CheckBox (node, options) {
+  if (!node) throw new Error('Dom element should be provided')
+
+  this.options = options
+
+  node.addEventListener('change', (e) => {
+    options.mediator.notify(e.target.checked, this.options.fieldName)
+  })
+}
+
 export {
-  Input
+  Input,
+  CheckBox
 }
