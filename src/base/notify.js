@@ -32,4 +32,4 @@ DangerAlert.prototype.createAlert = function (msg) {
   return div
 }
 
-export default Notify
+export default new Notify()

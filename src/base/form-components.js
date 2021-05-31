@@ -20,6 +20,10 @@ function Input (node, options = { required: true, minLength: 5 }) {
     node.parentNode.insertBefore(div, node.nextSibling)
   }
 
+  this.clearField = () => {
+    node.value = ''
+  }
+
   this.validate = (options) => {
     if (!options.required) return
     node.classList.remove('invalid')
@@ -36,7 +40,7 @@ function Input (node, options = { required: true, minLength: 5 }) {
       return false
     }
 
-    node.nextSibling.remove()
+    if (node.nextSibling) node.nextSibling.remove()
     return true
   }
 }

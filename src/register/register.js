@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss'
 import { axios } from '../utils/axios'
 import { Input, CheckBox } from '../base/form-components'
-import Notify from '../base/notify'
+import notify from '../base/notify'
 
 //TODO Update to module pattern || improve to reuse in login
 
@@ -70,21 +70,12 @@ function RegisterHandler () {
     return isNameValid && isEmailValid && isPasswordValid;
   }
 
-  const alert = () => {
-    const alert = new Notify()
-    const success = alert.createElement('success')
-    const danger = alert.createElement('danger')
-    const successNotifier = success.createAlert('User successfully saved')
-    const dangerNotifier = danger.createAlert('Something went wrong')
+  const success = () => {
+    return notify.createElement('success')
+  }
 
-    return {
-      success: function () {
-        return successNotifier
-      },
-      danger: function () {
-        return dangerNotifier
-      }
-    }
+  const danger = () => {
+    return notify.createElement('danger')
   }
 
   form.addEventListener('submit', (e) => {
@@ -93,14 +84,15 @@ function RegisterHandler () {
     const isValid = validate()
     if (isValid) {
       axios.post('/auth/register', this.formData)
-        .then(res => {
-          targetNode.appendChild(alert().success())
+        .then(() => {
+          targetNode.appendChild(success().createAlert('User was successfully created'))
+          name.clearField()
+          email.clearField()
+          password.clearField()
         })
         .catch(err => {
-          targetNode.appendChild(alert().danger())
+          targetNode.appendChild(danger().createAlert(err.response.data.message))
         })
-    } else {
-      console.log(1);
     }
   })
 }
