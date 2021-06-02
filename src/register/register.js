@@ -5,7 +5,6 @@ import { Input, CheckBox } from '../base/form-components'
 import notify from '../base/notify'
 
 //TODO Update to module pattern || improve to reuse in login
-//TODO Disable button on save
 
 function RegisterHandler () {
   const nameInput = document.getElementById('name')
