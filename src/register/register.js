@@ -5,6 +5,7 @@ import { Input, CheckBox } from '../base/form-components'
 import notify from '../base/notify'
 
 //TODO Update to module pattern || improve to reuse in login
+//TODO Disable button on save
 
 function RegisterHandler () {
   const nameInput = document.getElementById('name')
@@ -70,12 +71,9 @@ function RegisterHandler () {
     return isNameValid && isEmailValid && isPasswordValid;
   }
 
-  const success = () => {
-    return notify.createElement('success')
-  }
-
-  const danger = () => {
-    return notify.createElement('danger')
+  const alert = (type, msg) => {
+    const el = notify.createElement(type)
+    return el.createAlert(msg)
   }
 
   form.addEventListener('submit', (e) => {
@@ -85,13 +83,13 @@ function RegisterHandler () {
     if (isValid) {
       axios.post('/auth/register', this.formData)
         .then(() => {
-          targetNode.appendChild(success().createAlert('User was successfully created'))
+          targetNode.appendChild(alert('success', 'User was successfully created'))
           name.clearField()
           email.clearField()
           password.clearField()
         })
         .catch(err => {
-          targetNode.appendChild(danger().createAlert(err.response.data.message))
+          targetNode.appendChild(alert('danger', err.response.data.message))
         })
     }
   })
