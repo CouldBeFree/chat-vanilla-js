@@ -13,6 +13,7 @@ function RegisterHandler () {
   const emailInput = document.getElementById('email')
   const passwordInput = document.getElementById('password')
   const checkBox = document.getElementById('check')
+  const submitButton = document.querySelector('button[type="submit"]')
 
   this.formData = {
     userType: 'user'
@@ -81,6 +82,7 @@ function RegisterHandler () {
     const targetNode = document.querySelector('#notify')
     const isValid = validate()
     if (isValid) {
+      submitButton.disabled = true
       axios.post('/auth/register', this.formData)
         .then(() => {
           targetNode.appendChild(alert('success', 'User was successfully created'))
@@ -91,6 +93,7 @@ function RegisterHandler () {
         .catch(err => {
           targetNode.appendChild(alert('danger', err.response.data.message))
         })
+        .finally(() => submitButton.disabled = false)
     }
   })
 }
